@@ -3,6 +3,9 @@
 ## Overview
 
 This guide sets up an Ansible control node on an EC2 instance and connects to two other managed EC2 hosts for automation.
+```
+/etc/ansible
+```
 
 ---
 
