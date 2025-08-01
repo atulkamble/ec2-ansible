@@ -10,7 +10,7 @@ This guide sets up an Ansible control node on an EC2 instance and connects to tw
 
 ### Launch 3 EC2 Instances
 
-* **AMI**: Amazon Linux 2
+* **AMI**: Amazon Linux 2023
 * **Network**: Same VPC and Subnet
 * **Instance Types**:
 
