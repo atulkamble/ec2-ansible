@@ -19,7 +19,7 @@ This guide sets up an Ansible control node on an EC2 instance and connects to tw
 
 ### SSH Key Pair
 
-* Create/use a key pair named `ansible.pem`
+* use a key pair named `ansible.pem`
 
 ---
 
