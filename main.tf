@@ -164,13 +164,13 @@ data "aws_availability_zones" "available" {
 resource "aws_instance" "ansible_server" {
   ami                    = data.aws_ami.amazon_linux.id
   instance_type          = "t3.medium"
-  key_name              = aws_key_pair.ansible_key.key_name
+  key_name               = aws_key_pair.ansible_key.key_name
   vpc_security_group_ids = [aws_security_group.ansible_server_sg.id]
-  subnet_id             = aws_subnet.ansible_public_subnet.id
+  subnet_id              = aws_subnet.ansible_public_subnet.id
 
   user_data = templatefile("${path.module}/scripts/ansible_server_setup.sh", {
-    host1_ip = aws_instance.ansible_host1.private_ip
-    host2_ip = aws_instance.ansible_host2.private_ip
+    host1_ip    = aws_instance.ansible_host1.private_ip
+    host2_ip    = aws_instance.ansible_host2.private_ip
     private_key = file(var.private_key_path)
   })
 
@@ -189,9 +189,9 @@ resource "aws_instance" "ansible_server" {
 resource "aws_instance" "ansible_host1" {
   ami                    = data.aws_ami.amazon_linux.id
   instance_type          = "t3.micro"
-  key_name              = aws_key_pair.ansible_key.key_name
+  key_name               = aws_key_pair.ansible_key.key_name
   vpc_security_group_ids = [aws_security_group.ansible_hosts_sg.id]
-  subnet_id             = aws_subnet.ansible_public_subnet.id
+  subnet_id              = aws_subnet.ansible_public_subnet.id
 
   tags = {
     Name = "ansible-host-1"
@@ -203,9 +203,9 @@ resource "aws_instance" "ansible_host1" {
 resource "aws_instance" "ansible_host2" {
   ami                    = data.aws_ami.amazon_linux.id
   instance_type          = "t3.micro"
-  key_name              = aws_key_pair.ansible_key.key_name
+  key_name               = aws_key_pair.ansible_key.key_name
   vpc_security_group_ids = [aws_security_group.ansible_hosts_sg.id]
-  subnet_id             = aws_subnet.ansible_public_subnet.id
+  subnet_id              = aws_subnet.ansible_public_subnet.id
 
   tags = {
     Name = "ansible-host-2"
