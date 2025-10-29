@@ -1,0 +1,8 @@
+# AWS Configuration
+aws_region = "us-east-1"
+
+# SSH Key Paths
+# Make sure to generate your SSH key pair before running terraform
+# Example: ssh-keygen -t rsa -b 4096 -f ~/.ssh/ansible.pem -C "ansible-key"
+public_key_path  = "~/.ssh/ansible.pub"
+private_key_path = "~/.ssh/ansible.pem"
