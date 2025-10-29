@@ -139,20 +139,10 @@ resource "aws_key_pair" "ansible_key" {
   }
 }
 
-# Data source for latest Amazon Linux 2023 AMI
-data "aws_ami" "amazon_linux" {
-  most_recent = true
-  owners      = ["amazon"]
-
-  filter {
-    name   = "name"
-    values = ["al2023-ami-*-x86_64"]
-  }
-
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
+# Use specific Amazon Linux 2 AMI
+# AMI: ami-07860a2d7eb515d9a (Amazon Linux 2)
+locals {
+  ami_id = "ami-07860a2d7eb515d9a"
 }
 
 # Data source for availability zones
@@ -162,7 +152,7 @@ data "aws_availability_zones" "available" {
 
 # Ansible Server (Control Node)
 resource "aws_instance" "ansible_server" {
-  ami                    = data.aws_ami.amazon_linux.id
+  ami                    = local.ami_id
   instance_type          = "t3.medium"
   key_name               = aws_key_pair.ansible_key.key_name
   vpc_security_group_ids = [aws_security_group.ansible_server_sg.id]
@@ -187,7 +177,7 @@ resource "aws_instance" "ansible_server" {
 
 # Ansible Host 1
 resource "aws_instance" "ansible_host1" {
-  ami                    = data.aws_ami.amazon_linux.id
+  ami                    = local.ami_id
   instance_type          = "t3.micro"
   key_name               = aws_key_pair.ansible_key.key_name
   vpc_security_group_ids = [aws_security_group.ansible_hosts_sg.id]
@@ -201,7 +191,7 @@ resource "aws_instance" "ansible_host1" {
 
 # Ansible Host 2
 resource "aws_instance" "ansible_host2" {
-  ami                    = data.aws_ami.amazon_linux.id
+  ami                    = local.ami_id
   instance_type          = "t3.micro"
   key_name               = aws_key_pair.ansible_key.key_name
   vpc_security_group_ids = [aws_security_group.ansible_hosts_sg.id]
