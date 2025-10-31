@@ -54,7 +54,7 @@ fi
 
 # Install Python 3 and pip
 echo "Step 5: Installing Python 3 and pip..."
-sudo yum install -y python3 python3-pip
+sudo yum install -y tree python3 python3-pip
 
 # Verify Python installation
 if command -v python3 &> /dev/null; then
