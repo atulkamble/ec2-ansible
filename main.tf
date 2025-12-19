@@ -151,18 +151,30 @@ resource "aws_security_group" "ansible_hosts_sg" {
   }
 }
 
-# Create Key Pair or import existing
+# Data source to check for existing key pair
+data "aws_key_pair" "existing_key" {
+  count    = var.use_existing_key_pair ? 1 : 0
+  key_name = var.key_pair_name
+}
+
+# Create Key Pair only if not using existing one
 resource "aws_key_pair" "ansible_key" {
-  key_name   = "ansible"
+  count      = var.create_key_pair && !var.use_existing_key_pair ? 1 : 0
+  key_name   = var.key_pair_name
   public_key = file(var.public_key_path)
 
   tags = {
-    Name = "ansible-keypair"
+    Name = "${var.key_pair_name}-keypair"
   }
 
   lifecycle {
     ignore_changes = [public_key]
   }
+}
+
+# Local value to determine which key pair to use
+locals {
+  key_pair_name = var.use_existing_key_pair ? data.aws_key_pair.existing_key[0].key_name : aws_key_pair.ansible_key[0].key_name
 }
 
 # Use specific Amazon Linux 2 AMI
@@ -180,7 +192,7 @@ data "aws_availability_zones" "available" {
 resource "aws_instance" "ansible_server" {
   ami                    = local.ami_id
   instance_type          = "t3.medium"
-  key_name               = aws_key_pair.ansible_key.key_name
+  key_name               = local.key_pair_name
   vpc_security_group_ids = [aws_security_group.ansible_server_sg.id]
   subnet_id              = aws_subnet.ansible_public_subnet.id
 
@@ -205,7 +217,7 @@ resource "aws_instance" "ansible_server" {
 resource "aws_instance" "ansible_host1" {
   ami                    = local.ami_id
   instance_type          = "t3.micro"
-  key_name               = aws_key_pair.ansible_key.key_name
+  key_name               = local.key_pair_name
   vpc_security_group_ids = [aws_security_group.ansible_hosts_sg.id]
   subnet_id              = aws_subnet.ansible_public_subnet.id
 
@@ -219,7 +231,7 @@ resource "aws_instance" "ansible_host1" {
 resource "aws_instance" "ansible_host2" {
   ami                    = local.ami_id
   instance_type          = "t3.micro"
-  key_name               = aws_key_pair.ansible_key.key_name
+  key_name               = local.key_pair_name
   vpc_security_group_ids = [aws_security_group.ansible_hosts_sg.id]
   subnet_id              = aws_subnet.ansible_public_subnet.id
 

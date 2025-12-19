@@ -6,11 +6,38 @@
 # Complete automated setup
 ./setup.sh
 
+# Check if key pair exists in AWS
+./check_keypair.sh [key-name] [region]
+
 # Or step-by-step:
 ./generate_key.sh           # Generate SSH keys
 terraform init              # Initialize Terraform
 terraform plan              # Preview changes
 terraform apply             # Deploy infrastructure
+```
+
+## 🔑 Key Pair Management
+
+### Check Existing Key Pair
+```bash
+# Check for default 'ansible' key in us-east-1
+./check_keypair.sh
+
+# Check for specific key and region
+./check_keypair.sh my-key us-west-2
+```
+
+### Configuration Options in terraform.tfvars
+```hcl
+# Use existing AWS key pair
+use_existing_key_pair = true
+create_key_pair = false
+key_pair_name = "my-existing-key"
+
+# Create new key pair (default)
+use_existing_key_pair = false
+create_key_pair = true
+key_pair_name = "ansible"
 ```
 
 ## 📋 What Gets Created

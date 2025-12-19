@@ -79,11 +79,37 @@ Copy the example variables file:
 cp terraform.tfvars.example terraform.tfvars
 ```
 
-Edit `terraform.tfvars` with your settings (default values work out of the box):
+Edit `terraform.tfvars` with your settings. You have three options for key pair configuration:
+
+**Option 1: Create a new key pair (default)**
 ```hcl
-aws_region       = "us-east-1"
-public_key_path  = "~/.ssh/ansible.pub"
-private_key_path = "~/.ssh/ansible.pem"
+aws_region            = "us-east-1"
+public_key_path       = "~/.ssh/ansible.pub"
+private_key_path      = "~/.ssh/ansible.pem"
+key_pair_name         = "ansible"
+create_key_pair       = true
+use_existing_key_pair = false
+```
+
+**Option 2: Use an existing AWS key pair**
+```hcl
+aws_region            = "us-east-1"
+private_key_path      = "~/.ssh/my-existing-key.pem"
+key_pair_name         = "my-existing-key"  # Name of your existing AWS key pair
+create_key_pair       = false
+use_existing_key_pair = true
+# public_key_path not needed when using existing key pair
+```
+
+**Option 3: Let Terraform manage existing key pair**
+If you have a local key pair but want to import it to AWS:
+```hcl
+aws_region            = "us-east-1"
+public_key_path       = "~/.ssh/ansible.pub"
+private_key_path      = "~/.ssh/ansible.pem"
+key_pair_name         = "ansible"
+create_key_pair       = true
+use_existing_key_pair = false
 ```
 
 #### 4. Initialize Terraform

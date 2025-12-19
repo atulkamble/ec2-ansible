@@ -6,3 +6,10 @@ aws_region = "us-east-1"
 # Example: ssh-keygen -t rsa -b 4096 -f ~/.ssh/ansible.pem -C "ansible-key"
 public_key_path  = "~/.ssh/ansible.pub"
 private_key_path = "~/.ssh/ansible.pem"
+
+# Key Pair Configuration
+# Set use_existing_key_pair = true if you want to use an existing AWS key pair
+# Set create_key_pair = false if you don't want to create a new key pair
+key_pair_name         = "ansible"
+create_key_pair       = true
+use_existing_key_pair = false

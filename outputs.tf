@@ -42,3 +42,13 @@ output "ssh_command_host2" {
   description = "SSH command to connect to Host 2"
   value       = "ssh -i ~/.ssh/ansible.pem ec2-user@${aws_instance.ansible_host2.public_ip}"
 }
+
+output "key_pair_name" {
+  description = "Name of the key pair being used"
+  value       = local.key_pair_name
+}
+
+output "key_pair_source" {
+  description = "Source of the key pair (existing or created)"
+  value       = var.use_existing_key_pair ? "existing" : "created"
+}
