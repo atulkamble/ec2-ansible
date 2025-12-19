@@ -1,8 +1,8 @@
 terraform {
   required_providers {
     aws = {
-      source  = "hashicorp/aws"
-      version = "~> 5.0"
+      source = "hashicorp/aws"
+      version = "6.27.0"
     }
   }
 }
@@ -77,6 +77,21 @@ resource "aws_security_group" "ansible_server_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  # HTTP access
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+    # HTTPS access
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
   # Outbound traffic
   egress {
     from_port   = 0
@@ -84,6 +99,7 @@ resource "aws_security_group" "ansible_server_sg" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+
 
   tags = {
     Name = "ansible-server-sg"
@@ -96,14 +112,6 @@ resource "aws_security_group" "ansible_hosts_sg" {
   description = "Security group for Ansible managed hosts"
   vpc_id      = aws_vpc.ansible_vpc.id
 
-  # SSH access from anywhere (you may want to restrict this)
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
   # SSH access from Ansible server
   ingress {
     from_port       = 22
@@ -111,6 +119,24 @@ resource "aws_security_group" "ansible_hosts_sg" {
     protocol        = "tcp"
     security_groups = [aws_security_group.ansible_server_sg.id]
   }
+  
+  # HTTP access
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+    # HTTPS access
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+ 
 
   # Outbound traffic
   egress {
@@ -142,7 +168,7 @@ resource "aws_key_pair" "ansible_key" {
 # Use specific Amazon Linux 2 AMI
 # AMI: ami-07860a2d7eb515d9a (Amazon Linux 2)
 locals {
-  ami_id = "ami-07860a2d7eb515d9a"
+  ami_id = "ami-068c0051b15cdb816"
 }
 
 # Data source for availability zones
